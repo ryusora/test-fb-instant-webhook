@@ -22,25 +22,25 @@ module.exports = function(app) {
     app.post('/bot', function(request, response) {
        var data = request.body;
        console.log('received bot webhook');
-       console.log(JSON.stringify(data));
+       console.log(JSON.stringify(data))
         // Make sure this is a page subscription
-        // if (data.object === 'page') {
-        //     // Iterate over each entry - there may be multiple if batched
-        //     data.forEach(function(entry) {
-        //        var pageID = entry.id;
-        //        var timeOfEvent = entry.time;
-        //         // Iterate over each messaging event
-        //         entry.messaging.forEach(function(event) {
-        //             if (event.message) {
-        //                 receivedMessage(event);
-        //             } else if (event.game_play) {
-        //                 receivedGameplay(event);
-        //             } else {
-        //                 console.log("Webhook received unknown event: ", event);
-        //             }
-        //         });
-        //     });
-        // }
+        if (data.object === 'page') {
+            // Iterate over each entry - there may be multiple if batched
+            data.entry.forEach(function(entry) {
+               var pageID = entry.id;
+               var timeOfEvent = entry.time;
+                // Iterate over each messaging event
+                entry.changes.forEach(function(event) {
+                    if (event.field === 'messages') {
+                        receivedMessage(event);
+                    } else if (event.field === 'messaging_game_plays') {
+                        receivedGameplay(event);
+                    } else {
+                        console.log("Webhook received unknown event: ", event.field);
+                    }
+                });
+            });
+        }
         response.sendStatus(200);
     });
 
@@ -48,35 +48,38 @@ module.exports = function(app) {
     // Handle messages sent by player directly to the game bot here
     //
     function receivedMessage(event) {
-      console.log(JSON.stringtify(event));
+      console.log("Correctly received Message");
+      console.log(JSON.stringify(event));
     }
 
     //
     // Handle game_play (when player closes game) events here. 
     //
     function receivedGameplay(event) {
+        console.log("Correctly received Gameplay Event");
+        console.log(JSON.stringify(event));
         // Page-scoped ID of the bot user
-        var senderId = event.sender.id; 
+        // var senderId = event.sender.id; 
 
-        // FBInstant player ID
-        var playerId = event.game_play.player_id; 
+        // // FBInstant player ID
+        // var playerId = event.game_play.player_id; 
 
-        // FBInstant context ID 
-        var contextId = event.game_play.context_id;
+        // // FBInstant context ID 
+        // var contextId = event.game_play.context_id;
 
-        // Check for payload
-        if (event.game_play.payload) {
-            //
-            // The variable payload here contains data set by
-            // FBInstant.setSessionData()
-            //
-            var payload = JSON.parse(event.game_play.payload);
+        // // Check for payload
+        // if (event.game_play.payload) {
+        //     //
+        //     // The variable payload here contains data set by
+        //     // FBInstant.setSessionData()
+        //     //
+        //     var payload = JSON.parse(event.game_play.payload);
 
-            // In this example, the bot is just "echoing" the message received
-            // immediately. In your game, you'll want to delay the bot messages
-            // to remind the user to play 1, 3, 7 days after game play, for example.
-            sendMessage(senderId, null, "Want to play again?", "Play now!", payload);
-        }
+        //     // In this example, the bot is just "echoing" the message received
+        //     // immediately. In your game, you'll want to delay the bot messages
+        //     // to remind the user to play 1, 3, 7 days after game play, for example.
+        //     sendMessage(senderId, null, "Want to play again?", "Play now!", payload);
+        // }
     }
 
     //
