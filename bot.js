@@ -1,5 +1,3 @@
-import { EventEmitter } from 'events';
-
 var request = require('request');
 
 module.exports = function(app) {
