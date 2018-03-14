@@ -92,7 +92,8 @@ module.exports = function(app) {
 
     function sendMessageBackWithButton(event) {
         var button = {
-            type: "game_play",
+            type: "web_url",
+            url: "https://www.facebook.com/nam.votrung",
             title: "Click Now!"
         };
 
