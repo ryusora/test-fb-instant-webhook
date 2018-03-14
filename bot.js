@@ -93,7 +93,7 @@ module.exports = function(app) {
     function sendMessageBackWithButton(event) {
         var button = {
             type: "game_play",
-            title: cta
+            title: "Click Now!"
         };
 
         button.payload = JSON.stringify(event.message);
