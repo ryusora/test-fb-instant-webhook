@@ -22,24 +22,25 @@ module.exports = function(app) {
     app.post('/bot', function(request, response) {
        var data = request.body;
        console.log('received bot webhook');
+       console.log(JSON.stringify(data));
         // Make sure this is a page subscription
-        if (data.object === 'page') {
-            // Iterate over each entry - there may be multiple if batched
-            data.entry.forEach(function(entry) {
-               var pageID = entry.id;
-               var timeOfEvent = entry.time;
-                // Iterate over each messaging event
-                entry.messaging.forEach(function(event) {
-                    if (event.message) {
-                        receivedMessage(event);
-                    } else if (event.game_play) {
-                        receivedGameplay(event);
-                    } else {
-                        console.log("Webhook received unknown event: ", event);
-                    }
-                });
-            });
-        }
+        // if (data.object === 'page') {
+        //     // Iterate over each entry - there may be multiple if batched
+        //     data.forEach(function(entry) {
+        //        var pageID = entry.id;
+        //        var timeOfEvent = entry.time;
+        //         // Iterate over each messaging event
+        //         entry.messaging.forEach(function(event) {
+        //             if (event.message) {
+        //                 receivedMessage(event);
+        //             } else if (event.game_play) {
+        //                 receivedGameplay(event);
+        //             } else {
+        //                 console.log("Webhook received unknown event: ", event);
+        //             }
+        //         });
+        //     });
+        // }
         response.sendStatus(200);
     });
 
@@ -47,7 +48,7 @@ module.exports = function(app) {
     // Handle messages sent by player directly to the game bot here
     //
     function receivedMessage(event) {
-      
+      console.log(JSON.stringtify(event));
     }
 
     //
