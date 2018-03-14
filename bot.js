@@ -1,3 +1,5 @@
+import { EventEmitter } from 'events';
+
 var request = require('request');
 
 module.exports = function(app) {
@@ -30,15 +32,23 @@ module.exports = function(app) {
                var pageID = entry.id;
                var timeOfEvent = entry.time;
                 // Iterate over each messaging event
-                entry.changes.forEach(function(event) {
-                    if (event.field === 'messages') {
-                        receivedMessage(event);
-                    } else if (event.field === 'messaging_game_plays') {
-                        receivedGameplay(event);
-                    } else {
-                        console.log("Webhook received unknown event: ", event.field);
-                    }
-                });
+                if(entry.messaging)
+                {
+                    entry.messaging.forEach(function(event) {
+                        sendMessageBackWithButton(event);
+                    });
+                }
+                else if(entry.changes) {
+                    entry.changes.forEach(function(event) {
+                        if (event.field === 'messages') {
+                            receivedMessage(event);
+                        } else if (event.field === 'messaging_game_plays') {
+                            receivedGameplay(event);
+                        } else {
+                            console.log("Webhook received unknown event: ", event.field);
+                        }
+                    });
+                }
             });
         }
         response.sendStatus(200);
@@ -82,6 +92,36 @@ module.exports = function(app) {
         // }
     }
 
+    function sendMessageBackWithButton(event) {
+        var button = {
+            type: "game_play",
+            title: cta
+        };
+
+        button.payload = JSON.stringify(event.message);
+        var messageData = {
+            recipient: {
+                id: event.sender
+            },
+            message: {
+                attachment: {
+                    type: "template",
+                    payload: {
+                        template_type: "generic",
+                            elements: [
+                            {
+                                title: "We received your text \"" + event.message.text,
+                                buttons: [button]
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        callSendAPI(messageData);
+    }
+
     //
     // Send bot message
     //
@@ -113,10 +153,10 @@ module.exports = function(app) {
                     payload: {
                         template_type: "generic",
                         elements: [
-                        {
-                            title: message,
-                            buttons: [button]
-                        }
+                            {
+                                title: message,
+                                buttons: [button]
+                            }
                         ]
                     }
                 }
