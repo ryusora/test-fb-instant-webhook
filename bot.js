@@ -107,9 +107,11 @@ module.exports = function(app) {
                     type: "template",
                     payload: {
                         template_type: "generic",
-                            elements: [
+                        elements: [
                             {
-                                title: "We received your text \"" + event.message.text,
+                                title: "Hoddie",
+                                subtitle: "We received your text \"" + event.message.text + "\"",
+                                image_url:"https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.0-9/27858380_10208848573450812_8901266995794575342_n.jpg?oh=def8a6f3b23f9bab334e4e0be09136af&oe=5B4A2658",
                                 buttons: [button]
                             }
                         ]
