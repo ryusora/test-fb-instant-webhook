@@ -97,7 +97,7 @@ module.exports = function(app) {
             title: "Click Now!"
         };
 
-        button.payload = JSON.stringify(event.message);
+        // button.payload = JSON.stringify(event.message);
         var messageData = {
             recipient: {
                 id: event.sender.id
