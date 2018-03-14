@@ -99,7 +99,7 @@ module.exports = function(app) {
         button.payload = JSON.stringify(event.message);
         var messageData = {
             recipient: {
-                id: event.sender
+                id: event.sender.id
             },
             message: {
                 attachment: {
