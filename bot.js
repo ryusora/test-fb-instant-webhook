@@ -98,6 +98,8 @@ module.exports = function(app) {
         };
 
         // button.payload = JSON.stringify(event.message);
+        var image_data = (event.message.attachments && event.message.attachments[0].type === 'image')?event.message.attachments[0].payload.url:"https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.0-9/27858380_10208848573450812_8901266995794575342_n.jpg?oh=def8a6f3b23f9bab334e4e0be09136af&oe=5B4A2658";
+        var user_text = event.message.text || "NONE";
         var messageData = {
             recipient: {
                 id: event.sender.id
@@ -110,8 +112,8 @@ module.exports = function(app) {
                         elements: [
                             {
                                 title: "Hoddie",
-                                subtitle: "We received your text \"" + event.message.text + "\"",
-                                image_url:"https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.0-9/27858380_10208848573450812_8901266995794575342_n.jpg?oh=def8a6f3b23f9bab334e4e0be09136af&oe=5B4A2658",
+                                subtitle: "We received your text \"" + user_text + "\"",
+                                image_url:image_data,
                                 buttons: [button]
                             }
                         ]
